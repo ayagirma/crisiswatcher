@@ -438,6 +438,7 @@
           return '<div class="row" style="justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--line)"><span style="overflow-wrap:anywhere">' + esc(s.email) + '</span><span class="row" style="--gap:.5rem"><span class="small muted">' + showTime(s.created_at) + '</span><button class="btn ghost sm" data-del-sub="' + esc(s.email) + '">Remove</button></span></div>';
         }).join("") + "</div>"
         : empty("No subscribers yet.", "Sign-ups from the newsletter box at the bottom of every page show up here.");
+    }, function (e) { var box = $("#sub-list"); if (box) box.innerHTML = empty("Couldn't load subscribers.", esc(e.message)); });
   }
 
   /* ── admin operator guide & notes ─────────────────── */
