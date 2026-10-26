@@ -40,7 +40,7 @@
     setPage('<form class="card stack login" id="login-form">' +
       '<h1 style="font-size:1.6rem">Log in</h1>' +
       '<p class="muted small">' + esc(note || "Enter your author or administrator email and password.") + "</p>" +
-      '<div class="field"><label for="l-email">Email <span class="muted">(or leave blank if primary admin)</span></label><input id="l-email" type="email" autocomplete="username" placeholder="author@crisiswatcher.org"></div>' +
+      '<div class="field"><label for="l-email">Email <span class="muted">(or leave blank if primary admin)</span></label><input id="l-email" type="email" autocomplete="username" placeholder="sshiferaw500@gmail.com"></div>' +
       '<div class="field"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" required></div>' +
       '<button class="btn primary block" type="submit">Log in</button>' +
       '<p class="small" id="login-msg" role="status"></p></form>');

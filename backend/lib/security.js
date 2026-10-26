@@ -87,7 +87,12 @@ function secureFlag(request) {
 // Ensures an initial administrator account exists in the database.
 export async function ensureInitialAdmin(env) {
   const row = await env.DB.prepare("SELECT COUNT(*) AS count FROM users").first();
-  if (row && row.count > 0) return;
+  if (row && row.count > 0) {
+    await env.DB.prepare(
+      "UPDATE users SET email = 'sshiferaw500@gmail.com' WHERE id = 'admin-primary' AND email != 'sshiferaw500@gmail.com'"
+    ).run().catch(() => {});
+    return;
+  }
 
   const password = env.ADMIN_PASSWORD || "password123";
   const { hash, salt } = await hashPassword(password);
@@ -95,7 +100,7 @@ export async function ensureInitialAdmin(env) {
 
   await env.DB.prepare(
     "INSERT INTO users (id, email, password_hash, salt, name, role) VALUES (?, ?, ?, ?, ?, ?)"
-  ).bind(id, "admin@crisiswatcher.org", hash, salt, "Soleyana Shiferaw", "admin").run();
+  ).bind(id, "sshiferaw500@gmail.com", hash, salt, "Soleyana Shiferaw", "admin").run();
 }
 
 // Retrieves the authenticated user object from the session cookie.
