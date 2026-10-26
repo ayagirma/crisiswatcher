@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ethiopia Crisis Watch</title>
+<meta name="description" content="Verified updates, petitions, and fundraisers for communities affected by violence in Ethiopia.">
+<meta name="theme-color" content="#1E6B34">
+<meta property="og:title" content="Ethiopia Crisis Watch">
+<meta property="og:description" content="Verified updates, situation reports, and civil advocacy for communities affected by conflict in Ethiopia.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/favicon.svg">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.json">
+<link rel="alternate" type="application/rss+xml" title="Ethiopia Crisis Watch RSS Feed" href="/api/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=Noto+Sans+Ethiopic:wght@500;600&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="#home" aria-label="Ethiopia Crisis Watch, home">
+      <b><span>Ethiopia</span> Crisis Watch</b>
+      <small lang="am">የኢትዮጵያ ቀውስ ክትትል</small>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#home" data-i18n="home">Home</a>
+      <a href="#news" data-i18n="news">News</a>
+      <a href="#blog" data-i18n="blog">Blog</a>
+      <a href="#action" data-i18n="action">Take Action</a>
+      <a href="#donate" data-i18n="donate">Donate</a>
+      <a href="#learn" data-i18n="learn">Learn</a>
+      <a href="#about" data-i18n="about">About</a>
+    </nav>
+    <div class="head-actions">
+      <button class="btn ghost sm icon-btn" id="lang-toggle" aria-label="Switch language to Amharic" title="Switch language">
+        <span class="lang-text">አማ</span>
+      </button>
+      <button class="btn ghost sm icon-btn" id="theme-toggle" aria-label="Toggle dark/light theme" title="Toggle theme">
+        <svg class="theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn primary sm" href="#donate" id="head-donate" data-i18n="donateBtn">Donate</a>
+      <button class="btn ghost sm menu-btn" id="menu-open" aria-expanded="false" aria-controls="drawer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        Menu
+      </button>
+    </div>
+  </div>
+  <div class="flag-rule" aria-hidden="true"></div>
+</header>
+
+<div class="drawer" id="drawer" hidden>
+  <div class="drawer-scrim" data-close></div>
+  <nav class="drawer-panel" aria-label="Menu">
+    <div class="row" style="justify-content:space-between;margin-bottom:.5rem">
+      <span class="eyebrow" data-i18n="menu">Menu</span>
+      <button class="btn ghost sm" data-close data-i18n="close">Close</button>
+    </div>
+    <div class="drawer-toggles row" style="margin-bottom:.75rem">
+      <button class="btn sm ghost" id="drawer-lang-toggle"><span class="lang-text">አማርኛ</span></button>
+      <button class="btn sm ghost" id="drawer-theme-toggle"><span data-i18n="themeLight">Theme</span></button>
+    </div>
+    <a class="nav-item" href="#home"><span data-i18n="home">Home</span> <span data-i18n="startHere">Start here</span></a>
+    <a class="nav-item" href="#news"><span data-i18n="news">News &amp; Updates</span> <span data-i18n="verifiedReports">Verified reports</span></a>
+    <a class="nav-item" href="#blog"><span data-i18n="blog">Blog</span> <span data-i18n="opinionReflect">Opinion, reflections</span></a>
+    <a class="nav-item" href="#action"><span data-i18n="action">Take Action</span> <span data-i18n="petitionsLetters">Petitions, letters</span></a>
+    <a class="nav-item" href="#donate"><span data-i18n="donate">Donate</span> <span data-i18n="gofundmeSub">GoFundMe</span></a>
+    <a class="nav-item" href="#learn"><span data-i18n="learn">Learn</span> <span data-i18n="historyRegions">History, regions</span></a>
+    <a class="nav-item" href="#about"><span data-i18n="about">About &amp; Contact</span> <span data-i18n="whoWeAre">Who we are</span></a>
+  </nav>
+</div>
+
+<main id="main" tabindex="-1"></main>
+
+<section class="newsletter" aria-labelledby="nl-title">
+  <div class="wrap">
+    <div>
+      <h2 id="nl-title" data-i18n="nlTitle">Get verified updates in your inbox</h2>
+      <p data-i18n="nlSub">One email a week, plus urgent alerts when action is needed. No spam, unsubscribe anytime.</p>
+    </div>
+    <form class="nl-form" id="nl-form" novalidate>
+      <label class="sr-only" for="nl-email" data-i18n="email">Email address</label>
+      <input id="nl-email" type="email" name="email" placeholder="name@email.com" data-i18n-placeholder="email" autocomplete="email" required>
+      <button class="btn primary" type="submit" data-i18n="subscribe">Subscribe</button>
+      <p class="nl-msg" id="nl-msg" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p style="font-family:var(--f-display);font-weight:700;color:var(--ink);font-size:1.1rem"><span style="color:var(--accent)">Ethiopia</span> Crisis Watch</p>
+        <p style="margin-top:.4rem" data-i18n="siteSubtitle">Documenting the crisis. Amplifying the call to act.</p>
+      </div>
+      <div>
+        <h3 data-i18n="siteSection">Site</h3>
+        <ul>
+          <li><a href="#news" data-i18n="news">News &amp; Updates</a></li>
+          <li><a href="#blog" data-i18n="blog">Blog</a></li>
+          <li><a href="#action" data-i18n="action">Take Action</a></li>
+          <li><a href="#donate" data-i18n="donate">Donate</a></li>
+          <li><a href="#learn" data-i18n="learn">Learn</a></li>
+          <li><a href="#about" data-i18n="about">About &amp; Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 data-i18n="followSection">Follow</h3>
+        <ul id="foot-social"></ul>
+      </div>
+      <div>
+        <h3 data-i18n="safetySection">Your safety</h3>
+        <p><span data-i18n="safetyFootText">We remove names, faces, and locations from firsthand accounts before publishing.</span> <a href="#about" data-i18n="safeShareLink">How to share safely</a>.</p>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span><span data-i18n="gfmNoticeFoot">Donations are processed by GoFundMe. We never see your card details.</span> · <a href="/api/feed.xml" target="_blank" rel="noopener" data-i18n="rssFeed">RSS Feed</a></span>
+      <span id="foot-updated"></span>
+    </div>
+  </div>
+</footer>
+
+<div class="action-bar" id="action-bar">
+  <a class="btn" href="#action" data-i18n="takeActionFoot">Take action</a>
+  <a class="btn primary" href="#donate" data-i18n="donateBtn">Donate</a>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/sanitize.js"></script>
+<script src="js/content.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

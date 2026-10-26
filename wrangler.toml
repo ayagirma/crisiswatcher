@@ -1,0 +1,27 @@
+# Cloudflare settings. The website (frontend/) and the API (backend/) deploy together.
+name = "ethiopia-crisis-watch"
+main = "backend/index.js"
+compatibility_date = "2026-05-01"
+
+workers_dev = true
+
+routes = [
+  { pattern = "crisiswatcher.org", custom_domain = true },
+  { pattern = "www.crisiswatcher.org", custom_domain = true }
+]
+
+[assets]
+directory = "./frontend"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ecw-db"
+# Replace with the id printed by `npx wrangler d1 create ecw-db` (README, "Put it online").
+# Local testing works without it.
+database_id = "25b7e19e-3156-4831-8dba-fd444852a2d6"
+migrations_dir = "backend/db/migrations"
+
+[observability]
+enabled = true

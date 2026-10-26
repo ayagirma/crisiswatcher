@@ -1,0 +1,17 @@
+{
+  "name": "Ethiopia Crisis Watch",
+  "short_name": "Crisis Watch",
+  "description": "Verified situation reports, petitions, and relief for communities affected by conflict in Ethiopia.",
+  "start_url": "/#home",
+  "display": "standalone",
+  "background_color": "#F4F5F1",
+  "theme_color": "#1E6B34",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

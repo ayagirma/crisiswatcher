@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · Ethiopia Crisis Watch</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body class="admin">
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="#posts"><b><span>Ethiopia</span> Crisis Watch</b><small>Admin</small></a>
+    <nav class="admin-tabs" id="tabs" aria-label="Admin" hidden>
+      <a href="#posts">Posts</a>
+      <a href="#authors" id="tab-authors">Authors</a>
+      <a href="#messages" id="tab-messages">Messages <span class="badge" id="unread" hidden></span></a>
+      <a href="#subscribers" id="tab-subscribers">Subscribers</a>
+      <a href="#guide" id="tab-guide">Guide &amp; Notes</a>
+    </nav>
+    <div class="row" style="--gap:.4rem">
+      <div class="user-pill" id="user-pill" hidden></div>
+      <a class="btn ghost sm" href="/" target="_blank" rel="noopener">View site</a>
+      <button class="btn ghost sm" id="logout" hidden>Log out</button>
+    </div>
+  </div>
+  <div class="flag-rule" aria-hidden="true"></div>
+</header>
+
+<main id="main" tabindex="-1"></main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/js/sanitize.js"></script>
+<script src="/js/content.js"></script>
+<script src="/admin/admin.js"></script>
+</body>
+</html>
