@@ -66,24 +66,6 @@ var CONTENT = {
       textAm: "የተመረጡ ተወካዮች አስቸኳይ የተኩስ አቁም እንዲደረግ፣ ንጹሃን ዜጎች እንዲጠበቁ እና ሁሉንም ማህበረሰቦች በእኩልነት የሚያሳትፍ አካታች የሰላም ድርድር እንዲካሄድ ጫና እንዲያደርጉ ይጠይቁ።",
       host: "ActionNetwork",
       url: "https://actionnetwork.org/letters/urgent-action-needed-to-stop-violence-and-save-lives-in-ethiopia?source=direct_link&"
-    },
-    {
-      id: "unrestricted-aid",
-      title: "Demand Unrestricted Humanitarian Access for All Ethiopian Regions",
-      titleAm: "ለሁሉም የኢትዮጵያ ክልሎች ያልተገደበ የሰብዓዊ እርዳታ መተላለፊያ እንዲፈቀድ መጠየቅ",
-      text: "Call upon the UN Security Council and international donors to hold all parties accountable for obstructing humanitarian aid convoys and medical supplies.",
-      textAm: "የተመድ የፀጥታው ምክር ቤት እና ዓለም አቀፍ ለጋሾች የሰብዓዊ እርዳታ አቅርቦቶችን የሚያስተጓጉሉ አካላትን ተጠያቂ እንዲያደርጉ ጥሪ ያቅርቡ።",
-      host: "Change.org",
-      url: "https://www.change.org/p/unrestricted-humanitarian-access-ethiopia"
-    },
-    {
-      id: "protect-civilians",
-      title: "Protect Vulnerable Communities and Places of Worship from Targeted Attacks",
-      titleAm: "ተጋላጭ ማህበረሰቦችን እና የእምነት ቦታዎችን ከጥቃት መጠበቅ",
-      text: "Urge the African Union Commission and international human rights bodies to investigate identity-based violence and safeguard historic heritage sites and places of worship.",
-      textAm: "የአፍሪካ ህብረት ኮሚሽን እና የሰብዓዊ መብት ተቋማት በማንነት ላይ የተመሰረቱ ጥቃቶችን እንዲመረምሩና ታሪካዊ የእምነት ቦታዎችን እንዲጠብቁ ይጠይቁ።",
-      host: "ActionNetwork",
-      url: "https://actionnetwork.org/petitions/protect-places-of-worship-in-ethiopia"
     }
   ],
 

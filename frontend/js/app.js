@@ -288,8 +288,8 @@
     var petText = pet ? ((currentLang === "am" && pet.textAm) ? pet.textAm : pet.text) : "";
     var counts = [
       [CONTENT.posts.length, t("updatesCountMonth")],
-      [CONTENT.petitions.length, t("openPetitionsCount")],
-      [CONTENT.campaigns.length, t("activeFundraisersCount")]
+      [CONTENT.petitions.length, CONTENT.petitions.length === 1 && currentLang === "en" ? "open petition" : t("openPetitionsCount")],
+      [CONTENT.campaigns.length, CONTENT.campaigns.length === 1 && currentLang === "en" ? "active fundraiser" : t("activeFundraisersCount")]
     ].filter(function (m) { return m[0]; });
 
     var dateHeader = "";
