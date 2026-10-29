@@ -89,7 +89,7 @@ export async function ensureInitialAdmin(env) {
   const row = await env.DB.prepare("SELECT COUNT(*) AS count FROM users").first();
   if (row && row.count > 0) {
     await env.DB.prepare(
-      "UPDATE users SET email = 'sshiferaw500@gmail.com' WHERE id = 'admin-primary' AND email != 'sshiferaw500@gmail.com'"
+      "UPDATE users SET email = 'ethiopiacrisiswatch@gmail.com' WHERE id = 'admin-primary' AND email != 'ethiopiacrisiswatch@gmail.com'"
     ).run().catch(() => {});
     return;
   }
@@ -100,7 +100,7 @@ export async function ensureInitialAdmin(env) {
 
   await env.DB.prepare(
     "INSERT INTO users (id, email, password_hash, salt, name, role) VALUES (?, ?, ?, ?, ?, ?)"
-  ).bind(id, "sshiferaw500@gmail.com", hash, salt, "Soleyana Shiferaw", "admin").run();
+  ).bind(id, "ethiopiacrisiswatch@gmail.com", hash, salt, "Soleyana Shiferaw", "admin").run();
 }
 
 // Retrieves the authenticated user object from the session cookie.
