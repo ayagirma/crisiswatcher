@@ -811,9 +811,11 @@
       '<p class="prose" style="font-size:1.15rem;margin-top:1rem;color:var(--ink-2)">' + esc(aSummary) + '</p>' +
       '<div class="article-modal" style="margin-top:2rem">' +
         secs.map(function (sec) {
+          var hText = currentLang === "am" && sec.headingAm ? sec.headingAm : sec.heading;
+          var pText = currentLang === "am" && sec.textAm ? sec.textAm : sec.text;
           return '<div class="article-section">' +
-            '<h3>' + esc(sec.heading) + '</h3>' +
-            '<p>' + esc(sec.text) + '</p>' +
+            '<h3>' + esc(hText) + '</h3>' +
+            '<p style="white-space:pre-line">' + esc(pText) + '</p>' +
           '</div>';
         }).join("") +
       '</div>' +
@@ -1084,4 +1086,17 @@
   window.addEventListener("hashchange", route);
   applyLang();
   route();
+
+  /* Load dynamic Learn page overrides from the database if configured via /admin/#learn */
+  api("/learn").then(function (d) {
+    if (!d || !d.learn) return;
+    var L = d.learn;
+    if (Array.isArray(L.timeline)) CONTENT.timeline = L.timeline;
+    if (Array.isArray(L.regionsInfo)) CONTENT.regionsInfo = L.regionsInfo;
+    if (Array.isArray(L.articles)) CONTENT.articles = L.articles;
+    if (Array.isArray(L.resources)) CONTENT.resources = L.resources;
+    if (Array.isArray(L.sources)) CONTENT.sources = L.sources;
+    var h = (location.hash || "#home").slice(1);
+    if (h === "learn" || h === "home" || h.indexOf("article-") === 0) route();
+  }, function () {});
 })();

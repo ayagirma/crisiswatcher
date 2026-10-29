@@ -91,6 +91,9 @@
 
     if (h === "new") { tab = "posts"; editPost(null); }
     else if (h.indexOf("edit-") === 0) { tab = "posts"; editPost(decodeURIComponent(h.slice(5))); }
+    else if (h === "learn") {
+      learnPage();
+    }
     else if (h === "authors") {
       if (!isAdmin) { toast("Authors can only access blog posts."); location.hash = "#posts"; return; }
       authorsPage();
@@ -441,6 +444,235 @@
     }, function (e) { var box = $("#sub-list"); if (box) box.innerHTML = empty("Couldn't load subscribers.", esc(e.message)); });
   }
 
+  /* ── Learn Page Editor (Timeline, Regions, Guides, Contacts) ── */
+  var learnData = null;
+  var learnSubTab = "timeline";
+
+  function cloneDefaultLearn() {
+    return JSON.parse(JSON.stringify({
+      timeline: (window.CONTENT && CONTENT.timeline) || [],
+      regionsInfo: (window.CONTENT && CONTENT.regionsInfo) || [],
+      articles: (window.CONTENT && CONTENT.articles) || [],
+      resources: (window.CONTENT && CONTENT.resources) || [],
+      sources: (window.CONTENT && CONTENT.sources) || []
+    }));
+  }
+
+  function learnPage() {
+    setPage('<div class="wrap page-head"><p class="eyebrow">Learn Page Editor</p><h1 style="margin-top:.4rem">Edit Learn Page Content</h1></div><div class="wrap">' + empty("Loading Learn page content…") + '</div>');
+    api("/admin/learn").then(function (d) {
+      var def = cloneDefaultLearn();
+      if (d && d.learn) {
+        learnData = {
+          timeline: Array.isArray(d.learn.timeline) ? d.learn.timeline : def.timeline,
+          regionsInfo: Array.isArray(d.learn.regionsInfo) ? d.learn.regionsInfo : def.regionsInfo,
+          articles: Array.isArray(d.learn.articles) ? d.learn.articles : def.articles,
+          resources: Array.isArray(d.learn.resources) ? d.learn.resources : def.resources,
+          sources: Array.isArray(d.learn.sources) ? d.learn.sources : def.sources
+        };
+      } else {
+        learnData = def;
+      }
+      renderLearnEditor();
+    }, function (e) {
+      learnData = cloneDefaultLearn();
+      renderLearnEditor();
+      toast("Loaded default Learn content (" + e.message + ")");
+    });
+  }
+
+  function renderLearnEditor(saveNote) {
+    if (!learnData) learnData = cloneDefaultLearn();
+    var bodyHtml = "";
+
+    if (learnSubTab === "timeline") {
+      bodyHtml = '<div class="row" style="justify-content:space-between;align-items:center">' +
+        '<div><h2>Timeline of Key Events</h2><p class="small muted">Add, edit, or reorder historical events displayed on the Learn page timeline.</p></div>' +
+        '<button type="button" class="btn primary" data-learn-add="timeline">+ Add Event</button>' +
+      '</div>' +
+      '<div class="stack" style="--gap:1rem">' +
+        (learnData.timeline.length ? learnData.timeline.map(function (item, idx) {
+          return '<div class="learn-item-card">' +
+            '<div class="learn-item-head">' +
+              '<b>Event #' + (idx + 1) + (item.date ? ' · ' + esc(item.date) : '') + '</b>' +
+              '<div class="row" style="--gap:.35rem">' +
+                (idx > 0 ? '<button type="button" class="btn ghost sm" data-learn-move="timeline" data-idx="' + idx + '" data-dir="-1">↑ Up</button>' : '') +
+                (idx < learnData.timeline.length - 1 ? '<button type="button" class="btn ghost sm" data-learn-move="timeline" data-idx="' + idx + '" data-dir="1">↓ Down</button>' : '') +
+                '<button type="button" class="btn ghost sm" style="color:var(--red)" data-learn-del="timeline" data-idx="' + idx + '">Delete</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="two">' +
+              '<div class="field"><label>Date / Period (e.g. Nov 2020)</label><input data-learn-sec="timeline" data-idx="' + idx + '" data-key="date" value="' + esc(item.date || "") + '" placeholder="Nov 2020"></div>' +
+              '<div class="field"><label>Headline / Title</label><input data-learn-sec="timeline" data-idx="' + idx + '" data-key="title" value="' + esc(item.title || "") + '" placeholder="Event title"></div>' +
+            '</div>' +
+            '<div class="field"><label>Description</label><textarea data-learn-sec="timeline" data-idx="' + idx + '" data-key="text" style="min-height:4.5rem" placeholder="What happened and why it matters">' + esc(item.text || "") + '</textarea></div>' +
+            '<details class="learn-am-box"><summary>Amharic Translation (optional — falls back to English if blank)</summary>' +
+              '<div class="stack" style="margin-top:.75rem;--gap:.6rem">' +
+                '<div class="two">' +
+                  '<div class="field"><label>Date (Amharic)</label><input data-learn-sec="timeline" data-idx="' + idx + '" data-key="dateAm" value="' + esc(item.dateAm || "") + '" placeholder="ኅዳር 2013 ዓ.ም."></div>' +
+                  '<div class="field"><label>Title (Amharic)</label><input data-learn-sec="timeline" data-idx="' + idx + '" data-key="titleAm" value="' + esc(item.titleAm || "") + '"></div>' +
+                '</div>' +
+                '<div class="field"><label>Description (Amharic)</label><textarea data-learn-sec="timeline" data-idx="' + idx + '" data-key="textAm" style="min-height:4rem">' + esc(item.textAm || "") + '</textarea></div>' +
+              '</div>' +
+            '</details>' +
+          '</div>';
+        }).join("") : empty("No timeline events yet.", "Click '+ Add Event' to add your first timeline item.")) +
+      '</div>';
+    } else if (learnSubTab === "regions") {
+      bodyHtml = '<div class="row" style="justify-content:space-between;align-items:center">' +
+        '<div><h2>Regions &amp; Communities</h2><p class="small muted">Edit regional explainers shown on both the Learn page and the Interactive Crisis Map.</p></div>' +
+        '<button type="button" class="btn primary" data-learn-add="regionsInfo">+ Add Region</button>' +
+      '</div>' +
+      '<div class="stack" style="--gap:1rem">' +
+        (learnData.regionsInfo.length ? learnData.regionsInfo.map(function (r, idx) {
+          return '<div class="learn-item-card">' +
+            '<div class="learn-item-head">' +
+              '<b>Region #' + (idx + 1) + ': ' + esc(r.name || "Untitled") + '</b>' +
+              '<div class="row" style="--gap:.35rem">' +
+                (idx > 0 ? '<button type="button" class="btn ghost sm" data-learn-move="regionsInfo" data-idx="' + idx + '" data-dir="-1">↑ Up</button>' : '') +
+                (idx < learnData.regionsInfo.length - 1 ? '<button type="button" class="btn ghost sm" data-learn-move="regionsInfo" data-idx="' + idx + '" data-dir="1">↓ Down</button>' : '') +
+                '<button type="button" class="btn ghost sm" style="color:var(--red)" data-learn-del="regionsInfo" data-idx="' + idx + '">Delete</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="field"><label>Region Name</label><input data-learn-sec="regionsInfo" data-idx="' + idx + '" data-key="name" value="' + esc(r.name || "") + '" placeholder="e.g. Amhara, Oromia, Tigray"></div>' +
+            '<div class="field"><label>Regional Context &amp; Explainer</label><textarea data-learn-sec="regionsInfo" data-idx="' + idx + '" data-key="text" style="min-height:5rem">' + esc(r.text || "") + '</textarea></div>' +
+            '<details class="learn-am-box"><summary>Amharic Translation (optional)</summary>' +
+              '<div class="stack" style="margin-top:.75rem;--gap:.6rem">' +
+                '<div class="field"><label>Region Name (Amharic)</label><input data-learn-sec="regionsInfo" data-idx="' + idx + '" data-key="nameAm" value="' + esc(r.nameAm || "") + '"></div>' +
+                '<div class="field"><label>Explainer (Amharic)</label><textarea data-learn-sec="regionsInfo" data-idx="' + idx + '" data-key="textAm" style="min-height:4.5rem">' + esc(r.textAm || "") + '</textarea></div>' +
+              '</div>' +
+            '</details>' +
+          '</div>';
+        }).join("") : empty("No regions configured.")) +
+      '</div>';
+    } else if (learnSubTab === "articles") {
+      bodyHtml = '<div class="row" style="justify-content:space-between;align-items:center">' +
+        '<div><h2>Educational Guides &amp; Slide Series</h2><p class="small muted">Edit multi-section articles and guides displayed at the bottom of the Learn page.</p></div>' +
+        '<button type="button" class="btn primary" data-learn-add="articles">+ Add Guide</button>' +
+      '</div>' +
+      '<div class="stack" style="--gap:1.25rem">' +
+        (learnData.articles.length ? learnData.articles.map(function (art, idx) {
+          var secs = Array.isArray(art.sections) ? art.sections : [];
+          return '<div class="learn-item-card">' +
+            '<div class="learn-item-head">' +
+              '<b>Guide #' + (idx + 1) + ': ' + esc(art.title || "Untitled Guide") + '</b>' +
+              '<div class="row" style="--gap:.35rem">' +
+                (idx > 0 ? '<button type="button" class="btn ghost sm" data-learn-move="articles" data-idx="' + idx + '" data-dir="-1">↑ Up</button>' : '') +
+                (idx < learnData.articles.length - 1 ? '<button type="button" class="btn ghost sm" data-learn-move="articles" data-idx="' + idx + '" data-dir="1">↓ Down</button>' : '') +
+                '<button type="button" class="btn ghost sm" style="color:var(--red)" data-learn-del="articles" data-idx="' + idx + '">Delete Guide</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="two">' +
+              '<div class="field"><label>Guide Title</label><input data-learn-sec="articles" data-idx="' + idx + '" data-key="title" value="' + esc(art.title || "") + '" placeholder="A short history of the conflicts"></div>' +
+              '<div class="field"><label>Series Label / Tag</label><input data-learn-sec="articles" data-idx="' + idx + '" data-key="note" value="' + esc(art.note || "") + '" placeholder="Slide series · Part 1"></div>' +
+            '</div>' +
+            '<div class="field"><label>Short Summary (shown on the card)</label><textarea data-learn-sec="articles" data-idx="' + idx + '" data-key="summary" style="min-height:3.5rem">' + esc(art.summary || "") + '</textarea></div>' +
+            '<details class="learn-am-box"><summary>Guide Title &amp; Summary in Amharic (optional)</summary>' +
+              '<div class="stack" style="margin-top:.75rem;--gap:.6rem">' +
+                '<div class="two">' +
+                  '<div class="field"><label>Title (Amharic)</label><input data-learn-sec="articles" data-idx="' + idx + '" data-key="titleAm" value="' + esc(art.titleAm || "") + '"></div>' +
+                  '<div class="field"><label>Label / Tag (Amharic)</label><input data-learn-sec="articles" data-idx="' + idx + '" data-key="noteAm" value="' + esc(art.noteAm || "") + '"></div>' +
+                '</div>' +
+                '<div class="field"><label>Summary (Amharic)</label><textarea data-learn-sec="articles" data-idx="' + idx + '" data-key="summaryAm" style="min-height:3.5rem">' + esc(art.summaryAm || "") + '</textarea></div>' +
+              '</div>' +
+            '</details>' +
+            '<div class="stack" style="--gap:.75rem;margin-top:.25rem">' +
+              '<div class="row" style="justify-content:space-between"><b>Sections inside this guide (' + secs.length + ')</b><button type="button" class="btn sm" data-learn-add-sec="' + idx + '">+ Add Section</button></div>' +
+              secs.map(function (s, sIdx) {
+                return '<div class="learn-sec-card">' +
+                  '<div class="row" style="justify-content:space-between">' +
+                    '<span class="small muted"><b>Section ' + (sIdx + 1) + '</b></span>' +
+                    '<button type="button" class="btn ghost sm" style="color:var(--red)" data-learn-del-sec="' + idx + '" data-sidx="' + sIdx + '">Remove Section</button>' +
+                  '</div>' +
+                  '<div class="field"><label>Section Heading</label><input data-learn-art="' + idx + '" data-sidx="' + sIdx + '" data-key="heading" value="' + esc(s.heading || "") + '"></div>' +
+                  '<div class="field"><label>Section Text</label><textarea data-learn-art="' + idx + '" data-sidx="' + sIdx + '" data-key="text" style="min-height:5rem">' + esc(s.text || "") + '</textarea></div>' +
+                  '<details class="learn-am-box"><summary>Section Amharic (optional)</summary>' +
+                    '<div class="stack" style="margin-top:.6rem;--gap:.5rem">' +
+                      '<div class="field"><label>Heading (Amharic)</label><input data-learn-art="' + idx + '" data-sidx="' + sIdx + '" data-key="headingAm" value="' + esc(s.headingAm || "") + '"></div>' +
+                      '<div class="field"><label>Text (Amharic)</label><textarea data-learn-art="' + idx + '" data-sidx="' + sIdx + '" data-key="textAm" style="min-height:4rem">' + esc(s.textAm || "") + '</textarea></div>' +
+                    '</div>' +
+                  '</details>' +
+                '</div>';
+              }).join("") +
+            '</div>' +
+          '</div>';
+        }).join("") : empty("No educational guides yet.")) +
+      '</div>';
+    } else if (learnSubTab === "resources") {
+      bodyHtml = '<div class="stack" style="--gap:2rem">' +
+        '<div class="stack" style="--gap:1rem">' +
+          '<div class="row" style="justify-content:space-between;align-items:center">' +
+            '<div><h2>Emergency Contacts &amp; Humanitarian Aid</h2><p class="small muted">Organizations and hotlines listed on the Learn page.</p></div>' +
+            '<button type="button" class="btn primary sm" data-learn-add="resources">+ Add Contact</button>' +
+          '</div>' +
+          (learnData.resources.map(function (res, idx) {
+            return '<div class="learn-item-card">' +
+              '<div class="learn-item-head"><b>Contact #' + (idx + 1) + ': ' + esc(res.name || "New Contact") + '</b>' +
+                '<button type="button" class="btn ghost sm" style="color:var(--red)" data-learn-del="resources" data-idx="' + idx + '">Delete</button>' +
+              '</div>' +
+              '<div class="two">' +
+                '<div class="field"><label>Organization Name</label><input data-learn-sec="resources" data-idx="' + idx + '" data-key="name" value="' + esc(res.name || "") + '"></div>' +
+                '<div class="field"><label>Category Tag (e.g. Missing Persons)</label><input data-learn-sec="resources" data-idx="' + idx + '" data-key="tag" value="' + esc(res.tag || "") + '"></div>' +
+              '</div>' +
+              '<div class="field"><label>Description</label><textarea data-learn-sec="resources" data-idx="' + idx + '" data-key="desc" style="min-height:3.5rem">' + esc(res.desc || "") + '</textarea></div>' +
+              '<div class="two">' +
+                '<div class="field"><label>Website Link</label><input data-learn-sec="resources" data-idx="' + idx + '" data-key="link" value="' + esc(res.link || "") + '"></div>' +
+                '<div class="field"><label>Phone / Contact Note</label><input data-learn-sec="resources" data-idx="' + idx + '" data-key="contactText" value="' + esc(res.contactText || "") + '"></div>' +
+              '</div>' +
+            '</div>';
+          }).join("")) +
+        '</div>' +
+        '<div class="stack" style="--gap:1rem">' +
+          '<div class="row" style="justify-content:space-between;align-items:center">' +
+            '<div><h2>Reputable Sources</h2><p class="small muted">Research and reporting links shown at the bottom of the Learn page.</p></div>' +
+            '<button type="button" class="btn primary sm" data-learn-add="sources">+ Add Source</button>' +
+          '</div>' +
+          (learnData.sources.map(function (src, idx) {
+            return '<div class="learn-item-card">' +
+              '<div class="two" style="align-items:end">' +
+                '<div class="field"><label>Source Label</label><input data-learn-sec="sources" data-idx="' + idx + '" data-key="label" value="' + esc(src.label || "") + '"></div>' +
+                '<div class="field"><label>URL</label><div class="row" style="--gap:.4rem"><input style="flex:1" data-learn-sec="sources" data-idx="' + idx + '" data-key="url" value="' + esc(src.url || "") + '"><button type="button" class="btn ghost sm" style="color:var(--red)" data-learn-del="sources" data-idx="' + idx + '">Delete</button></div></div>' +
+              '</div>' +
+            '</div>';
+          }).join("")) +
+        '</div>' +
+      '</div>';
+    }
+
+    setPage('<div class="wrap page-head row" style="justify-content:space-between;align-items:flex-start">' +
+      '<div><p class="eyebrow">Learn Page Editor</p><h1 style="margin-top:.4rem">Learn Page &amp; Timeline</h1>' +
+      '<p class="prose">Update the historical timeline, regional explainers, educational slide guides, and emergency contacts directly from here.</p></div>' +
+      '<div class="row"><a class="btn ghost" href="/#learn" target="_blank" rel="noopener">Preview Learn Page ↗</a><button type="button" class="btn primary lg" id="btn-save-learn">Save Changes</button></div>' +
+    '</div>' +
+    '<div class="wrap stack" style="padding-bottom:3rem;--gap:1.25rem">' +
+      '<div class="learn-subtabs" role="tablist">' +
+        '<button type="button" class="btn ' + (learnSubTab === "timeline" ? "primary" : "ghost") + ' sm" data-learn-tab="timeline">1. Timeline (' + learnData.timeline.length + ')</button>' +
+        '<button type="button" class="btn ' + (learnSubTab === "regions" ? "primary" : "ghost") + ' sm" data-learn-tab="regions">2. Regions (' + learnData.regionsInfo.length + ')</button>' +
+        '<button type="button" class="btn ' + (learnSubTab === "articles" ? "primary" : "ghost") + ' sm" data-learn-tab="articles">3. Educational Guides (' + learnData.articles.length + ')</button>' +
+        '<button type="button" class="btn ' + (learnSubTab === "resources" ? "primary" : "ghost") + ' sm" data-learn-tab="resources">4. Contacts &amp; Sources</button>' +
+      '</div>' +
+      bodyHtml +
+      '<div class="learn-save-bar">' +
+        '<span class="save-state' + (dirty ? " dirty" : "") + '" id="learn-save-state">' + (dirty ? "Unsaved changes — click Save Changes to publish to the site" : esc(saveNote || "All changes saved")) + '</span>' +
+        '<div class="row"><a class="btn ghost sm" href="/#learn" target="_blank" rel="noopener">View on site ↗</a><button type="button" class="btn primary" id="btn-save-learn-bottom">Save Changes</button></div>' +
+      '</div>' +
+    '</div>');
+  }
+
+  function saveLearnPage() {
+    if (!learnData) return;
+    var st = $("#learn-save-state");
+    if (st) st.textContent = "Saving to site…";
+    api("/admin/learn", { method: "PUT", body: learnData }).then(function () {
+      dirty = false;
+      renderLearnEditor("Saved at " + new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }));
+      toast("Learn page updated! Live on the site.");
+    }, function (e) {
+      if (st) { st.textContent = "Failed to save"; st.classList.add("dirty"); }
+      toast(e.message);
+    });
+  }
+
   /* ── admin operator guide & notes ─────────────────── */
   function guidePage() {
     setPage('<div class="wrap page-head"><p class="eyebrow">Admin Manual &amp; Notes</p><h1 style="margin-top:.4rem">Administrator Operations Guide</h1>' +
@@ -566,6 +798,68 @@
     if ((t = e.target.closest("[data-save]"))) { save(t.getAttribute("data-save")); return; }
     if (e.target.closest("#e-delete")) { deletePost(); return; }
 
+    /* Learn Page Editor interactions */
+    if ((t = e.target.closest("[data-learn-tab]"))) {
+      learnSubTab = t.getAttribute("data-learn-tab");
+      renderLearnEditor();
+      return;
+    }
+    if (e.target.closest("#btn-save-learn") || e.target.closest("#btn-save-learn-bottom")) {
+      saveLearnPage();
+      return;
+    }
+    if ((t = e.target.closest("[data-learn-add]"))) {
+      var sec = t.getAttribute("data-learn-add");
+      if (sec === "timeline") learnData.timeline.push({ date: "", title: "", text: "", dateAm: "", titleAm: "", textAm: "" });
+      else if (sec === "regionsInfo") learnData.regionsInfo.push({ name: "", text: "", nameAm: "", textAm: "" });
+      else if (sec === "articles") learnData.articles.push({ id: "guide-" + Date.now().toString(36), title: "", note: "Slide series", summary: "", sections: [{ heading: "", text: "" }] });
+      else if (sec === "resources") learnData.resources.push({ name: "", tag: "Support", desc: "", link: "https://", contactText: "" });
+      else if (sec === "sources") learnData.sources.push({ label: "", url: "https://" });
+      dirty = true;
+      renderLearnEditor();
+      return;
+    }
+    if ((t = e.target.closest("[data-learn-move]"))) {
+      var mSec = t.getAttribute("data-learn-move"), mIdx = +t.getAttribute("data-idx"), mDir = +t.getAttribute("data-dir");
+      var arr = learnData[mSec];
+      if (arr && arr[mIdx] && arr[mIdx + mDir]) {
+        var tmp = arr[mIdx];
+        arr[mIdx] = arr[mIdx + mDir];
+        arr[mIdx + mDir] = tmp;
+        dirty = true;
+        renderLearnEditor();
+      }
+      return;
+    }
+    if ((t = e.target.closest("[data-learn-del]"))) {
+      var dSec = t.getAttribute("data-learn-del"), dIdx = +t.getAttribute("data-idx");
+      if (confirm("Remove this item from the Learn page?")) {
+        learnData[dSec].splice(dIdx, 1);
+        dirty = true;
+        renderLearnEditor();
+      }
+      return;
+    }
+    if ((t = e.target.closest("[data-learn-add-sec]"))) {
+      var aIdx = +t.getAttribute("data-learn-add-sec");
+      if (learnData.articles[aIdx]) {
+        if (!Array.isArray(learnData.articles[aIdx].sections)) learnData.articles[aIdx].sections = [];
+        learnData.articles[aIdx].sections.push({ heading: "", text: "", headingAm: "", textAm: "" });
+        dirty = true;
+        renderLearnEditor();
+      }
+      return;
+    }
+    if ((t = e.target.closest("[data-learn-del-sec]"))) {
+      var artIdx = +t.getAttribute("data-learn-del-sec"), secIdx = +t.getAttribute("data-sidx");
+      if (learnData.articles[artIdx] && learnData.articles[artIdx].sections) {
+        learnData.articles[artIdx].sections.splice(secIdx, 1);
+        dirty = true;
+        renderLearnEditor();
+      }
+      return;
+    }
+
     if (e.target.closest("#btn-toggle-author")) {
       showNewAuthorForm = !showNewAuthorForm;
       authorsPage();
@@ -628,12 +922,36 @@
 
   document.addEventListener("input", function (e) {
     if (e.target.closest("#e-body")) { markDirty(); updateWords(); updatePlaceholder(); return; }
-    if (e.target.closest("#e-title, #e-summary, #e-date, #e-author")) markDirty();
+    if (e.target.closest("#e-title, #e-summary, #e-date, #e-author")) { markDirty(); return; }
+    var lSec = e.target.getAttribute && e.target.getAttribute("data-learn-sec");
+    if (lSec && learnData && learnData[lSec]) {
+      var idx = +e.target.getAttribute("data-idx"), key = e.target.getAttribute("data-key");
+      if (learnData[lSec][idx]) {
+        learnData[lSec][idx][key] = e.target.value;
+        dirty = true;
+        var st = $("#learn-save-state");
+        if (st) { st.textContent = "Unsaved changes — click Save Changes to publish to the site"; st.classList.add("dirty"); }
+      }
+      return;
+    }
+    var lArt = e.target.getAttribute && e.target.getAttribute("data-learn-art");
+    if (lArt != null && learnData && learnData.articles[+lArt]) {
+      var sIdx = +e.target.getAttribute("data-sidx"), sKey = e.target.getAttribute("data-key");
+      if (learnData.articles[+lArt].sections && learnData.articles[+lArt].sections[sIdx]) {
+        learnData.articles[+lArt].sections[sIdx][sKey] = e.target.value;
+        dirty = true;
+        var st2 = $("#learn-save-state");
+        if (st2) { st2.textContent = "Unsaved changes — click Save Changes to publish to the site"; st2.classList.add("dirty"); }
+      }
+    }
   });
   document.addEventListener("change", function (e) { if (e.target.id === "e-file") uploadImage(e.target.files[0]); });
 
   document.addEventListener("keydown", function (e) {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && $("#e-body")) { e.preventDefault(); save(post.status); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+      if ($("#e-body")) { e.preventDefault(); save(post.status); }
+      else if ($("#btn-save-learn")) { e.preventDefault(); saveLearnPage(); }
+    }
   });
 
   document.addEventListener("paste", function (e) {

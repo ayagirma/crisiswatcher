@@ -68,3 +68,13 @@ body.admin { padding-bottom: 3rem; }
 .code-box { background: var(--sunken); border: 1px solid var(--line); border-radius: var(--r-sm); padding: .7rem 1rem; font-family: monospace; font-size: .88rem; display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .code-box code { color: var(--ink); user-select: all; }
 
+/* Learn Page Editor */
+.learn-subtabs { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.25rem; }
+.learn-item-card { padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); display: flex; flex-direction: column; gap: .85rem; }
+.learn-item-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding-bottom: .6rem; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.learn-am-box { background: var(--sunken); border: 1px solid var(--line); border-radius: var(--r-sm); padding: .6rem .9rem; }
+.learn-am-box summary { cursor: pointer; font-weight: 600; font-size: .88rem; color: var(--ink-2); user-select: none; }
+.learn-sec-card { background: var(--sunken); border: 1px solid var(--line); border-radius: var(--r-sm); padding: .9rem; display: flex; flex-direction: column; gap: .6rem; }
+.learn-save-bar { position: sticky; bottom: 1rem; z-index: 10; background: var(--surface); border: 1px solid var(--accent); border-radius: var(--r-md); padding: .85rem 1.25rem; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+

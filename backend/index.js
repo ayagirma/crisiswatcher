@@ -15,6 +15,7 @@ const ROUTES = [
   ["POST",   "/api/contact",                (c) => pub.contact(c.env, c.request)],
   ["POST",   "/api/subscribe",              (c) => pub.subscribe(c.env, c.request)],
   ["GET",    "/api/images/:id",             (c) => pub.getImage(c.env, c.id)],
+  ["GET",    "/api/learn",                  (c) => pub.getLearnContent(c.env)],
   ["GET",    "/api/feed.xml",               (c) => pub.feed(c.env, c.url)],
 
   ["POST",   "/api/admin/login",            (c) => admin.login(c.env, c.request)],
@@ -39,6 +40,8 @@ const ADMIN_ROUTES = [
   ["POST",   "/api/admin/users",            (c) => admin.createUser(c.env, c.request, c.user)],
   ["PUT",    "/api/admin/users/:id",        (c) => admin.updateUser(c.env, c.request, c.id, c.user)],
   ["DELETE", "/api/admin/users/:id",        (c) => admin.deleteUser(c.env, c.id, c.user)],
+  ["GET",    "/api/admin/learn",            (c) => admin.getLearn(c.env)],
+  ["PUT",    "/api/admin/learn",            (c) => admin.saveLearn(c.env, c.request)],
 ];
 
 function match(routes, method, path) {

@@ -332,3 +332,43 @@ export async function deleteUser(env, id, user) {
   await env.DB.prepare("DELETE FROM users WHERE id = ?").bind(id).run();
   return json({ ok: true });
 }
+
+// ── Learn Page Content Management (Admin & Authors) ────
+
+async function ensureSiteContentTable(env) {
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS site_content (
+      key        TEXT PRIMARY KEY,
+      data       TEXT NOT NULL,
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )`
+  ).run();
+}
+
+export async function getLearn(env) {
+  await ensureSiteContentTable(env);
+  const row = await env.DB.prepare("SELECT data, updated_at FROM site_content WHERE key = 'learn'").first();
+  if (!row || !row.data) return json({ learn: null });
+  return json({ learn: JSON.parse(row.data), updated_at: row.updated_at });
+}
+
+export async function saveLearn(env, request) {
+  await ensureSiteContentTable(env);
+  const body = await readJson(request, 500_000);
+  if (!body || typeof body !== "object") return error(400, "Invalid Learn page data.");
+
+  const payload = {};
+  if (Array.isArray(body.timeline)) payload.timeline = body.timeline;
+  if (Array.isArray(body.regionsInfo)) payload.regionsInfo = body.regionsInfo;
+  if (Array.isArray(body.articles)) payload.articles = body.articles;
+  if (Array.isArray(body.resources)) payload.resources = body.resources;
+  if (Array.isArray(body.sources)) payload.sources = body.sources;
+
+  const jsonStr = JSON.stringify(payload);
+  await env.DB.prepare(
+    `INSERT INTO site_content (key, data, updated_at) VALUES ('learn', ?, datetime('now'))
+     ON CONFLICT(key) DO UPDATE SET data = excluded.data, updated_at = datetime('now')`
+  ).bind(jsonStr).run();
+
+  return json({ ok: true, learn: payload });
+}

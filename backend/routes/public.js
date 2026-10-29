@@ -104,6 +104,17 @@ export async function getImage(env, id) {
   });
 }
 
+// GET /api/learn: dynamic Learn page content (timeline, regionsInfo, articles, resources, sources)
+export async function getLearnContent(env) {
+  try {
+    const row = await env.DB.prepare("SELECT data, updated_at FROM site_content WHERE key = 'learn'").first();
+    if (!row || !row.data) return json({ learn: null });
+    return json({ learn: JSON.parse(row.data), updated_at: row.updated_at });
+  } catch {
+    return json({ learn: null });
+  }
+}
+
 // GET /api/feed.xml or /rss.xml
 export async function feed(env, url) {
   const origin = url.origin;
