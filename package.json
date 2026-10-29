@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "wrangler dev",
     "dev": "wrangler dev",
     "db:setup": "wrangler d1 migrations apply ecw-db --local",
     "db:setup:online": "wrangler d1 migrations apply ecw-db --remote",

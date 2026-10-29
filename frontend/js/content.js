@@ -32,35 +32,41 @@ var CONTENT = {
     "Benishangul-Gumuz": "ቤኒሻንጉል-ጉሙዝ",
     "Gambela": "ጋምቤላ",
     "Sidama": "ሲዳማ",
-    "Addis Ababa": "አዲስ አበባ"
+    "Addis Ababa": "አዲስ አበባ",
+    "All Ethiopia": "መላው ኢትዮጵያ"
   },
 
-  /* Verified GoFundMe campaigns (set to [] to clear all prefabricated collection amounts) */
-  campaigns: [],
-
-  /* Template to add a real verified campaign in the future:
+  /* Verified GoFundMe campaigns */
   campaigns: [
     {
       id: "emergency-relief",
       featured: true,
-      title: "Your Campaign Title",
-      titleAm: "የዘመቻው ርዕስ",
-      region: "Arsi", // or "Amhara", "Oromia", "Tigray", etc.
-      organizer: "Organizer Name",
-      gofundmeUrl: "https://www.gofundme.com/f/your-actual-campaign",
-      goal: 0, // optional goal amount (set to 0 or omit to not show prefabricated collection bars)
+      title: "Emergency Humanitarian Relief for Displaced Families in Ethiopia",
+      titleAm: "በኢትዮጵያ ለተፈናቀሉ ቤተሰቦች አስቸኳይ የሰብዓዊ እርዳታ",
+      region: "All Ethiopia",
+      organizer: "Ethiopia Crisis Watch Relief",
+      gofundmeUrl: "https://gofund.me/58bd05e5a",
+      goal: 0,
       raised: 0,
       donors: 0,
-      summary: "Description of the relief effort.",
-      summaryAm: "የእርዳታው ዝርዝር መግለጫ።",
+      summary: "Support urgent humanitarian relief, emergency shelter, food, and medical assistance for families and communities affected by conflict and displacement in Ethiopia.",
+      summaryAm: "በኢትዮጵያ በግጭትና በመፈናቀል ለተጎዱ ቤተሰቦችና ማህበረሰቦች አስቸኳይ የሰብዓዊ እርዳታ፣ መጠለያ፣ ምግብና የህክምና ድጋፍ ለማድረስ ይርዱ።",
       uses: [],
       updates: []
     }
   ],
-  */
 
   /* Open advocacy petitions */
   petitions: [
+    {
+      id: "urgent-action-save-lives",
+      title: "Urgent Action Needed to Stop Violence and Save Lives in Ethiopia",
+      titleAm: "በኢትዮጵያ ሁከትን ለማስቆም እና የዜጎችን ህይወት ለማዳን አስቸኳይ እርምጃ ያስፈልጋል",
+      text: "Call upon elected representatives to pressure all parties for an immediate ceasefire, protect innocent civilians, and demand an inclusive peace process with equal representation for all ethnic communities.",
+      textAm: "የተመረጡ ተወካዮች አስቸኳይ የተኩስ አቁም እንዲደረግ፣ ንጹሃን ዜጎች እንዲጠበቁ እና ሁሉንም ማህበረሰቦች በእኩልነት የሚያሳትፍ አካታች የሰላም ድርድር እንዲካሄድ ጫና እንዲያደርጉ ይጠይቁ።",
+      host: "ActionNetwork",
+      url: "https://actionnetwork.org/letters/urgent-action-needed-to-stop-violence-and-save-lives-in-ethiopia?source=direct_link&"
+    },
     {
       id: "unrestricted-aid",
       title: "Demand Unrestricted Humanitarian Access for All Ethiopian Regions",

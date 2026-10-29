@@ -86,7 +86,7 @@
     if (!c || !c.goal || c.goal <= 0) return 0;
     return Math.min(100, Math.round(((c.raised || 0) / c.goal) * 100));
   }
-  function donateUrl(c) { return c.gofundmeUrl.replace(/\/+$/, "") + "/donate"; }
+  function donateUrl(c) { return c.gofundmeUrl; }
   function pageUrl(hash) { var base = CONFIG.siteUrl || (location.href.split("#")[0]); return base + (hash ? "#" + hash : ""); }
 
   var ICON = {
@@ -283,6 +283,7 @@
   VIEWS.home = function () {
     var c = featured(), latest = CONTENT.posts.slice(0, 3), last = CONTENT.posts[0], pet = CONTENT.petitions[0];
     var cTitle = c ? ((currentLang === "am" && c.titleAm) ? c.titleAm : c.title) : "";
+    var cSummary = c ? ((currentLang === "am" && c.summaryAm) ? c.summaryAm : c.summary) : "";
     var petTitle = pet ? ((currentLang === "am" && pet.titleAm) ? pet.titleAm : pet.title) : "";
     var petText = pet ? ((currentLang === "am" && pet.textAm) ? pet.textAm : pet.text) : "";
     var counts = [
@@ -313,6 +314,7 @@
       (c ? '<aside class="card donate-box stack" aria-label="Active fundraiser">' +
         '<div class="row" style="justify-content:space-between"><span class="eyebrow">' + t("activeFundraiser") + '</span>' + sampleTag(c) + "</div>" +
         '<h2 style="font-size:1.4rem">' + esc(cTitle) + "</h2>" +
+        (!c.goal && cSummary ? '<p class="muted small">' + esc(cSummary) + "</p>" : "") +
         progressBlock(c) +
         gfmButton(c, "block lg") +
         '<a class="btn ghost block" href="#donate">' + t("whereMoneyGoes") + '</a>' +
@@ -558,6 +560,11 @@
 
   /* ── Multi-country Advocacy Letter ───────────────── */
   var LETTER_TOPICS = {
+    ceasefire: {
+      label: "Ceasefire & inclusive peace negotiations",
+      labelAm: "አፋጣኝ የተኩስ አቁም እና ሁሉን አቀፍ የሰላም ድርድር",
+      ask: "pressure the Ethiopian government and armed groups to agree to an immediate ceasefire and begin serious, inclusive peace negotiations"
+    },
     access: {
       label: "Humanitarian access & relief corridors",
       labelAm: "የሰብአዊ እርዳታ አቅርቦትና የእርዳታ ኮሪደሮች",
@@ -575,15 +582,28 @@
     }
   };
 
-  var letterState = Object.assign({ country: "us", name: "", city: "", zip: "", topic: "access", note: "" }, store("letter") || {});
+  var letterState = Object.assign({ country: "us", name: "", city: "", zip: "", topic: "ceasefire", note: "" }, store("letter") || {});
 
   function letterText() {
-    var s = letterState, t = LETTER_TOPICS[s.topic] || LETTER_TOPICS.access;
+    var s = letterState, t = LETTER_TOPICS[s.topic] || LETTER_TOPICS.ceasefire;
     var c = (CONTENT.countries && CONTENT.countries[s.country]) || CONTENT.countries.us;
     var loc = s.city || (s.country === "us" ? "[city, state]" : "[city, constituency]");
     var postal = s.zip ? " (" + s.zip + ")" : "";
+    var salutation = c.salutation || "Dear Representative,";
 
-    return (c.salutation || "Dear Representative,") + "\n\n" +
+    if (s.topic === "ceasefire") {
+      return salutation + "\n\n" +
+        "As your constituent" + (s.name ? " (" + s.name + ")" : "") + " residing in " + loc + postal + ", I am deeply concerned about the escalating crisis in Ethiopia and urge you to take immediate action. The continued fighting risks a wider conflict that could cost millions of lives, force families from their homes, and destabilize neighboring African countries.\n\n" +
+        "We have already seen the devastating consequences of recent conflict in the region, where hunger, displacement, and catastrophic loss of life affected millions of people. We cannot allow this destruction to happen again.\n\n" +
+        "I urge you to use your position to pressure the Ethiopian government and armed groups to agree to an immediate ceasefire and begin serious, inclusive peace negotiations.\n\n" +
+        "Any lasting peace agreement must include meaningful representation from Ethiopia's diverse ethnic communities. No single ethnic group should be excluded from the peace process or have its future decided without an equal voice. All communities must have an opportunity to participate in negotiations and have their concerns, rights, security, and political interests meaningfully represented.\n\n" +
+        "A sustainable peace cannot simply end the fighting. It must address the grievances and insecurity that have contributed to Ethiopia's cycles of violence and ensure that all ethnic communities have an equal stake in the country's future.\n\n" +
+        (s.note ? s.note.trim() + "\n\n" : "") +
+        "I urge you to act before the violence grows worse and spreads further across the region. As my voice " + (s.country === "us" ? "in Washington" : (s.country === "uk" ? "in Westminster" : (s.country === "ca" ? "in Ottawa" : "in Parliament"))) + ", please help save lives, support an inclusive peace process, and encourage a lasting political solution in Ethiopia.\n\n" +
+        "Sincerely,\n" + (s.name || "[your name]") + "\n" + loc + (s.zip ? " " + s.zip : "");
+    }
+
+    return salutation + "\n\n" +
       "My name is " + (s.name || "[your name]") + ", and I am your constituent residing in " + loc + postal + ".\n\n" +
       "I am writing with grave urgency regarding the ongoing crisis and human rights violations affecting civilian communities across Ethiopia, including in Amhara, Oromia, and Tigray. Families are being displaced, critical aid corridors are blocked, and civilian centers continue to face violence.\n\n" +
       "As my elected representative, I urge you to " + t.ask + ".\n\n" +
@@ -652,7 +672,8 @@
             '<div class="letter-paper" id="letter-paper" tabindex="0" aria-label="' + (currentLang === "am" ? "የእርስዎ ደብዳቤ" : "Your constituent letter") + '"></div>' +
             '<div class="row" id="letter-actions">' +
               '<button class="btn primary" id="copy-letter">' + ICON.doc + (currentLang === "am" ? "ደብዳቤውን ቅዳ" : "Copy letter") + '</button>' +
-              (c.findUrl ? '<a class="btn" href="' + esc(c.findUrl) + '" target="_blank" rel="noopener">' + esc(currentLang === "am" && c.findLabelAm ? c.findLabelAm : c.findLabel) + " " + ICON.ext + '</a>' : '') +
+              '<a class="btn" style="background:#b91c1c;color:#fff" href="https://actionnetwork.org/letters/urgent-action-needed-to-stop-violence-and-save-lives-in-ethiopia?source=direct_link&" target="_blank" rel="noopener">' + (currentLang === "am" ? "በActionNetwork ይላኩ" : "Send via ActionNetwork") + " " + ICON.ext + '</a>' +
+              (c.findUrl ? '<a class="btn ghost" href="' + esc(c.findUrl) + '" target="_blank" rel="noopener">' + esc(currentLang === "am" && c.findLabelAm ? c.findLabelAm : c.findLabel) + " " + ICON.ext + '</a>' : '') +
               (c.altFindUrl ? '<a class="btn ghost" href="' + esc(c.altFindUrl) + '" target="_blank" rel="noopener">' + esc(currentLang === "am" && c.altFindLabelAm ? c.altFindLabelAm : c.altFindLabel) + " " + ICON.ext + '</a>' : '') +
             '</div>' +
             '<p class="small muted">' + (currentLang === "am" ? "ደብዳቤውን ቀድተው በተወካይዎ ይፋዊ ድረ-ገጽ የእውቂያ ቅጽ ላይ ይለጥፉት።" : "Copy the letter and paste it directly into your representative's official constituent contact page.") + '</p>' +

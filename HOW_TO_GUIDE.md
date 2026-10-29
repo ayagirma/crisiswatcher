@@ -129,7 +129,7 @@ Administrators have full operational control over the site content, authors, sec
 1. **Live Custom Domain:**
    - Primary: `https://crisiswatcher.org`
    - Secondary / WWW: `https://www.crisiswatcher.org`
-   - Direct Edge Fallback: `https://ethiopia-crisis-watch.ayagirma.workers.dev`
+   - Direct Edge Fallback: `https://ethiopia-crisis-watch.soleyana.workers.dev`
 2. **Domain Status:**
    - Connected directly via Cloudflare Workers Custom Domains in `wrangler.toml`.
    - Free auto-renewing SSL/TLS certificate issued and managed by Cloudflare.

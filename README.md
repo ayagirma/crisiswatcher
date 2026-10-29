@@ -93,7 +93,7 @@ To change the password later, repeat step 5. That logs out every device.
 
 The site is configured and connected to:
 - **`https://crisiswatcher.org`** (and `https://www.crisiswatcher.org`)
-- Fallback: `https://ethiopia-crisis-watch.ayagirma.workers.dev`
+- Fallback: `https://ethiopia-crisis-watch.soleyana.workers.dev`
 - Admin portal: `https://crisiswatcher.org/admin/`
 
 ### What the free plan covers
